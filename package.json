@@ -1,0 +1,45 @@
+{
+  "name": "@local/github-manager",
+  "version": "2.0.0",
+  "description": "Full-permission GitHub manager for DeepSeek Harness: OAuth login with all scopes, encrypted multi-account vault, agent tools for repos/files/keys/secrets/workflows, and a settings panel.",
+  "private": true,
+  "type": "commonjs",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "locale/*.json",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "github",
+    "oauth",
+    "keys"
+  ]
+}

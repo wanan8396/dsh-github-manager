@@ -1,0 +1,6 @@
+# Patch layer for @local/github-manager.
+# Registers the host half as a cordis Loader entry. The browser half is
+# discovered through this package's `dsh.client` declaration.
+- insert:
+    - id: github-manager
+      name: '@local/github-manager'
