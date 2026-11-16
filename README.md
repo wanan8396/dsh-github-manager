@@ -10,7 +10,7 @@ all with the OAuth token from that one consent screen. No `gh` CLI, no separate 
 
 | Area | Contents |
 | --- | --- |
-| **Login** | GitHub OAuth web flow (authorization code) with a built-in OAuth App, so it works right after installation |
+| **Login** | GitHub OAuth web flow (authorization code) against **your own** OAuth App — no credentials ship with the package |
 | **Scopes** | `repo` `repo:status` `repo_deployment` `public_repo` `delete_repo` `workflow` `admin:public_key` `admin:repo_hook` `gist` `read:org` `read:user` `user:email` `notifications` |
 | **Accounts** | Several GitHub accounts in one encrypted vault, with switch and remove |
 | **Settings page** | Settings → **GitHub 管理**: connection state, granted scopes, account list, OAuth App override |
@@ -20,18 +20,42 @@ all with the OAuth token from that one consent screen. No `gh` CLI, no separate 
 ## Install
 
 ```bash
-git clone https://github.com/wanan8396/dsh-github-manager.git
+git clone https://github.com/USERNAME/dsh-github-manager.git
 ```
 
 Then **Plugins → Add plugin → select that directory**, and enable the `github-manager` row.
 
-The plugin replaces the older `@local/github-oauth` bundle: both register the same OAuth callback,
-so keep only one of them enabled.
+If the older `@local/github-oauth` bundle is installed, keep only one of the two enabled: both
+register the same OAuth callback path.
+
+## Configure an OAuth App
+
+This package contains **no client id and no client secret**. Register an app once:
+
+1. https://github.com/settings/developers → **New OAuth App**
+2. Homepage URL: `http://<your-dsh-host>:3080`
+3. **Authorization callback URL**: `http://<your-dsh-host>:3080/plugins/github-oauth/callback`
+4. Copy the Client ID, generate a Client Secret
+
+Then give them to the plugin either way:
+
+```bash
+# a) environment, read at start-up and never written to disk
+export GITHUB_MANAGER_CLIENT_ID=Iv1.xxxxxxxx
+export GITHUB_MANAGER_CLIENT_SECRET=xxxxxxxxxxxxxxxx
+```
+
+```jsonc
+// b) encrypted vault: Settings → GitHub 管理 → 自定义 OAuth App
+//    or the agent
+{"tool":"gh_auth_setup","args":{"clientId":"Iv1.xxxxxxxx","clientSecret":"xxxxxxxx"}}
+```
+
+Both values are stored AES-256-GCM encrypted in `$DSH_HOME/github-manager/vault.json`.
 
 ## Sign in
 
-Open **Settings → GitHub 管理** and press **使用 GitHub 登录**. Approve on GitHub; the callback
-stores the token and the page flips to connected. Or ask the agent:
+**Settings → GitHub 管理 → 使用 GitHub 登录**, then approve on GitHub. Or through the agent:
 
 ```
 gh_auth_start          → returns the authorize URL
@@ -39,15 +63,6 @@ gh_auth_status         → confirm the connection and see granted scopes
 ```
 
 State values are 256-bit, single use, and expire after 10 minutes.
-
-### Custom OAuth App (optional)
-
-1. https://github.com/settings/developers → **New OAuth App**
-2. Authorization callback URL: `http://<your-dsh-host>:3080/plugins/github-oauth/callback`
-3. Paste Client ID / Secret into Settings → GitHub 管理, or call
-   `gh_auth_setup({ clientId, clientSecret })`.
-
-`gh_auth_setup({ useDefault: true })` switches back to the built-in app.
 
 ## Agent tools
 
@@ -57,7 +72,7 @@ State values are 256-bit, single use, and expire after 10 minutes.
 | --- | --- |
 | `gh_auth_status` | Connection state, scopes, vault path |
 | `gh_auth_start` | Create a state and return the authorize URL |
-| `gh_auth_setup` | Built-in or custom OAuth App |
+| `gh_auth_setup` | Save or read the OAuth App credentials |
 | `gh_auth_logout` | Drop every stored token |
 | `gh_accounts` / `gh_account_switch` / `gh_account_remove` | Multi-account handling |
 | `gh_preferences` | Default repository and pinned repositories |
@@ -127,9 +142,8 @@ Failures come back as `ok: false` with a `code` (`E_NOT_CONNECTED`, `E_GITHUB`, 
 
 ## Limitations
 
-- The built-in OAuth App's client secret ships with the bundle. It is only usable from this local
-  process, and any token still requires the user's own consent, but it is not a secret in the
-  "protects your account" sense — register your own app if that matters.
+- The repository contains no client id, client secret, access token, or account name. Only the
+  OAuth App *you* register, entered locally, is ever used.
 - Deleting a repository needs the `delete_repo` scope; accounts that authorized before this scope
   existed must sign in again.
 - `gh_secret_put` requires the repository to have Actions enabled so a public key exists.
