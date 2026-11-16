@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "GitHub 管理",
-    "description": "全权限 GitHub 管理：浏览器 OAuth 授权（repo、delete_repo、workflow、admin:public_key、gist、notifications 等），凭据与 token 用 AES-256-GCM 加密只存本机。不内置任何 OAuth App 凭据，需自建应用填入 Client ID/Secret（或走环境变量）。多账号切换/移除；给 agent 37 个工具直接建/删仓库、读写与删除代码、建/删 SSH 与 GPG 密钥、Deploy Key、Actions Secret、触发 workflow；gh_api 可调任意 REST 端点，不需要 gh CLI 或额外 PAT。"
+    "description": "全权限 GitHub 管理：浏览器 OAuth 授权（repo、delete_repo、workflow、admin:public_key、gist、notifications 等），凭据与 token 用 AES-256-GCM 加密只存本机。不内置任何 OAuth App 凭据，需自建应用填入 Client ID/Secret（或走环境变量）。多账号切换/移除；38 个 agent 工具直接建/删仓库、读写与删除代码、建/删 SSH 与 GPG 密钥、Deploy Key、Actions Secret、触发 workflow；gh_push 用 Git Data API 推送本地目录（只传变化文件、自动拦截凭据），gh_api 可调任意 REST 端点。不需要 gh CLI 或额外 PAT。"
   }
 }

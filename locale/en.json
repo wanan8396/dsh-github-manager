@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "GitHub manager",
-    "description": "Full-permission GitHub management: browser OAuth with every useful scope (repo, delete_repo, workflow, admin:public_key, gist, notifications), with credentials and tokens AES-256-GCM encrypted on this machine only. No OAuth App credentials ship with the package: register your own app and paste its Client ID/Secret (or use environment variables). Multi-account switching and removal, plus 37 agent tools to create/delete repositories, read/write/delete code, add or remove SSH and GPG keys, deploy keys and Actions secrets, trigger workflows, and reach any REST endpoint through gh_api — no gh CLI and no separate PAT."
+    "description": "Full-permission GitHub management: browser OAuth with every useful scope (repo, delete_repo, workflow, admin:public_key, gist, notifications), credentials and tokens AES-256-GCM encrypted on this machine only. No OAuth App credentials ship with the package: register your own app and paste its Client ID/Secret (or use environment variables). Multi-account switching and removal, plus 38 agent tools to create/delete repositories, read/write/delete code, manage SSH and GPG keys, deploy keys and Actions secrets, trigger workflows; gh_push publishes a local directory through the Git Data API uploading only changed files and blocking credentials, and gh_api reaches any REST endpoint. No gh CLI and no separate PAT."
   }
 }

@@ -14,7 +14,7 @@ all with the OAuth token from that one consent screen. No `gh` CLI, no separate 
 | **Scopes** | `repo` `repo:status` `repo_deployment` `public_repo` `delete_repo` `workflow` `admin:public_key` `admin:repo_hook` `gist` `read:org` `read:user` `user:email` `notifications` |
 | **Accounts** | Several GitHub accounts in one encrypted vault, with switch and remove |
 | **Settings page** | Settings → **GitHub 管理**: connection state, granted scopes, account list, OAuth App override |
-| **Agent tools** | 37 `gh_*` tools, including `gh_api` for any REST endpoint |
+| **Agent tools** | 38 `gh_*` tools, including `gh_push` and `gh_api` |
 | **Secrets** | AES-256-GCM vault at `$DSH_HOME/github-manager`, master key in a separate `0600` file |
 
 ## Install
@@ -86,6 +86,7 @@ State values are 256-bit, single use, and expire after 10 minutes.
 | `gh_repo_delete` | Delete permanently; requires `confirm: "DELETE"` |
 | `gh_file` | Read a file or list a directory |
 | `gh_file_write` / `gh_file_delete` | Commit a change through the contents API |
+| `gh_push` | Publish a local directory through the Git Data API; changed files only, credentials blocked |
 | `gh_branch_list` / `gh_commit_list` | History |
 | `gh_issues` / `gh_issue_create` / `gh_pulls` / `gh_pr_create` | Issues and PRs |
 | `gh_search` | Repositories, issues, code, users |
@@ -99,6 +100,30 @@ State values are 256-bit, single use, and expire after 10 minutes.
 | `gh_key_list` / `gh_key_add` / `gh_key_remove` | Deploy keys of a repository |
 | `gh_secret_list` / `gh_secret_put` / `gh_secret_delete` | Actions secrets, sealed-box encrypted before upload |
 | `gh_workflow_list` / `gh_workflow_run` | Actions workflows |
+
+### Push without git
+
+`gh_push` publishes a local directory through the Git Data API — no `git clone`, no `git push`,
+no token setup beyond the OAuth login. On a phone the git TLS handshake often stalls for tens of
+seconds and uploads far more than needed; this makes five HTTPS calls instead.
+
+```jsonc
+{"repo":"owner/name","dir":"/path/to/project","message":"feat: x","branch":"main"}
+{"repo":"owner/name","dir":"/path/to/project","message":"probe","dryRun":true}   // report only
+{"repo":"owner/name","dir":"/path/to/project","message":"drop it","deletePaths":["old.txt"]}
+```
+
+What it does:
+
+- compares each file's `git blob` sha against the remote tree, so **only changed files upload**
+- keeps untouched files (the tree is built on `base_tree`), creates the branch when it is missing
+- refuses to move a branch that advanced remotely unless `force: true`
+- skips `.git`, `node_modules`, `.venv`, `dist`, `build`, `target`, caches and OS junk
+- **blocks credential-looking files**: `.env`, `*.pem`, `*.key`, `id_rsa`, `vault.json`, `master.key`,
+  and any file containing a GitHub token (`ghp_`/`github_pat_`), a private key block, an OAuth
+  `client_secret` assignment or an AWS key — reported back as `blocked`, never uploaded
+
+The same operation is on the settings page as **推送本地目录到仓库**, with a 预演 button.
 
 ### Escape hatch
 
