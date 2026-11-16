@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "GitHub 管理",
-    "description": "全权限 GitHub 管理：浏览器 OAuth 授权（repo、delete_repo、workflow、admin:public_key、gist、notifications 等），凭据与 token 用 AES-256-GCM 加密只存本机，不内置任何 OAuth App 凭据（自建应用填 Client ID/Secret 或走环境变量）。多账号切换/移除；43 个 agent 工具覆盖建/删仓库、读写删代码、SSH/GPG/Deploy Key、Actions Secret、触发与查看 CI（运行记录、job 步骤、日志、构建产物下载、取消），gh_push 用 Git Data API 推送本地目录（只传变化文件、自动拦截凭据），gh_api 可调任意 REST 端点。不需要 gh CLI 或额外 PAT。"
+    "description": "全权限 GitHub 管理：浏览器 OAuth 授权（13 项权限），凭据与 token 用 AES-256-GCM 加密只存本机，不内置任何 OAuth App 凭据。58 个 gh_* 工具覆盖：建/删/改仓库、读写删代码、分支与 tag、gh_push 用 Git Data API 推送本地目录（只传变化文件、自动拦截凭据）、gh_download 拉取仓库或单文件、CI 触发与运行记录与 job 步骤与日志与构建产物下载与取消、SSH/GPG/Deploy Key/Actions Secret、PR 创建与详情与合并、issue 与评论、release、协作者、webhook、gist、compare、gh_api 兜底任意端点。附带 skills/github-manager 指导 agent 组合调用。不需要 gh CLI 或额外 PAT。"
   }
 }

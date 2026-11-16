@@ -14,8 +14,9 @@ all with the OAuth token from that one consent screen. No `gh` CLI, no separate 
 | **Scopes** | `repo` `repo:status` `repo_deployment` `public_repo` `delete_repo` `workflow` `admin:public_key` `admin:repo_hook` `gist` `read:org` `read:user` `user:email` `notifications` |
 | **Accounts** | Several GitHub accounts in one encrypted vault, with switch and remove |
 | **Settings page** | Settings → **GitHub 管理**: connection state, granted scopes, account list, OAuth App override |
-| **Agent tools** | 43 `gh_*` tools, including `gh_push`, the CI set and `gh_api` |
+| **Agent tools** | 58 `gh_*` tools covering repos, code, CI, keys, secrets, PRs, releases, collaborators |
 | **Secrets** | AES-256-GCM vault at `$DSH_HOME/github-manager`, master key in a separate `0600` file |
+| **Skill** | `skills/github-manager/SKILL.md` — how the agent should string the tools together |
 
 ## Install
 

@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "GitHub manager",
-    "description": "Full-permission GitHub management: browser OAuth with every useful scope (repo, delete_repo, workflow, admin:public_key, gist, notifications), credentials and tokens AES-256-GCM encrypted on this machine only, and no OAuth App credentials shipped (register your own, or use environment variables). Multi-account switching and removal; 43 agent tools covering repo create/delete, code read-write-delete, SSH/GPG/deploy keys, Actions secrets, triggering and inspecting CI (runs, job steps, logs, artifact download, cancel), gh_push publishing a local directory through the Git Data API with changed-files-only uploads and credential blocking, and gh_api for any REST endpoint. No gh CLI and no separate PAT."
+    "description": "Full-permission GitHub management: browser OAuth with 13 scopes, credentials and tokens AES-256-GCM encrypted on this machine only, no OAuth App credentials shipped. 58 gh_* tools covering repository create/delete/update, code read-write-delete, branches and tags, gh_push publishing a local directory through the Git Data API (changed files only, credentials blocked), gh_download for a repo snapshot or single file, CI dispatch plus runs, job steps, logs, artifact download and cancel, SSH/GPG/deploy keys and Actions secrets, pull request create/detail/merge, issues and comments, releases, collaborators, webhooks, gists, compare, and gh_api for any endpoint. Ships skills/github-manager to guide the agent across them. No gh CLI and no separate PAT."
   }
 }
