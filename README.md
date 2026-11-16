@@ -14,7 +14,7 @@ all with the OAuth token from that one consent screen. No `gh` CLI, no separate 
 | **Scopes** | `repo` `repo:status` `repo_deployment` `public_repo` `delete_repo` `workflow` `admin:public_key` `admin:repo_hook` `gist` `read:org` `read:user` `user:email` `notifications` |
 | **Accounts** | Several GitHub accounts in one encrypted vault, with switch and remove |
 | **Settings page** | Settings → **GitHub 管理**: connection state, granted scopes, account list, OAuth App override |
-| **Agent tools** | 38 `gh_*` tools, including `gh_push` and `gh_api` |
+| **Agent tools** | 43 `gh_*` tools, including `gh_push`, the CI set and `gh_api` |
 | **Secrets** | AES-256-GCM vault at `$DSH_HOME/github-manager`, master key in a separate `0600` file |
 
 ## Install
@@ -99,7 +99,28 @@ State values are 256-bit, single use, and expire after 10 minutes.
 | `gh_gpg_key_list` / `gh_gpg_key_add` / `gh_gpg_key_remove` | GPG keys on the account |
 | `gh_key_list` / `gh_key_add` / `gh_key_remove` | Deploy keys of a repository |
 | `gh_secret_list` / `gh_secret_put` / `gh_secret_delete` | Actions secrets, sealed-box encrypted before upload |
-| `gh_workflow_list` / `gh_workflow_run` | Actions workflows |
+| `gh_workflow_list` / `gh_workflow_run` | Actions workflows; trigger one by file name |
+| `gh_ci_runs` / `gh_ci_jobs` | Run history, then which job and step broke |
+| `gh_ci_logs` | A job's plain-text log, tail-first where failures live |
+| `gh_ci_artifacts` | List build artifacts, or download one as a zip |
+| `gh_ci_cancel` | Stop a stale run |
+
+### Compile and inspect CI
+
+A full loop through the API alone — push code, trigger the build, read the result, fetch the artifact:
+
+```jsonc
+{"repo":"owner/name","dir":"/path/to/project","message":"feat: x"}            // gh_push
+{"repo":"owner/name","workflow":"build.yml","ref":"main"}                     // gh_workflow_run
+{"repo":"owner/name"}                                                          // gh_ci_runs  → status/conclusion
+{"repo":"owner/name"}                                                          // gh_ci_jobs  → step that failed
+{"repo":"owner/name","jobId":123,"tailLines":200}                              // gh_ci_logs
+{"action":"download","repo":"owner/name","artifactId":456,"dir":"/tmp/out"}    // gh_ci_artifacts
+```
+
+`gh_ci_runs` reports status, conclusion, branch, event and duration; `gh_ci_jobs` marks each step
+✓ or ✗ so a red build points at one line; `gh_ci_logs` follows GitHub's 302 to the log blob and
+returns the tail.
 
 ### Push without git
 
